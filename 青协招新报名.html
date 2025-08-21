@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>青年志愿者协会 - 招新系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    
+    <!-- 配置Tailwind自定义颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6', // 蓝色作为主色调
+                        secondary: '#10B981', // 绿色作为辅助色
+                        accent: '#F59E0B', // 橙色作为强调色
+                        dark: '#1F2937',
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .form-input-focus {
+                @apply focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none;
+            }
+            .touch-friendly {
+                @apply touch-manipulation cursor-pointer;
+            }
+            .nav-active {
+                @apply text-primary border-primary font-medium;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 公众号适配样式 */
+        body {
+            -webkit-tap-highlight-color: transparent;
+            padding-top: 50px; /* 为固定导航栏预留空间 */
+        }
+        input, button, select {
+            -webkit-appearance: none;
+            border-radius: 0;
+        }
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+        <div class="flex">
+            <a href="#recruitment" id="navRecruitment" class="flex-1 text-center py-3 border-b-2 nav-active">
+                <i class="fa fa-user-plus mr-1"></i> 招新报名
+            </a>
+            <a href="#admin" id="navAdmin" class="flex-1 text-center py-3 border-b-2 border-transparent text-gray-500">
+                <i class="fa fa-cog mr-1"></i> 管理员
+            </a>
+        </div>
+    </nav>
+
+    <!-- 招新报名部分 -->
+    <section id="recruitment" class="min-h-screen">
+        <!-- 主横幅 -->
+        <div class="bg-gradient-to-r from-primary to-primary/80 text-white py-8 px-5">
+            <div class="text-center">
+                <h2 class="text-xl md:text-2xl font-bold mb-3">广州市信息技术职业学校</h2>
+                <p class="text-sm md:text-base">青年志愿者协会 2025学年第一学期招新</p>
+            </div>
+        </div>
+
+        <!-- 介绍部分 -->
+        <section class="py-6 bg-white px-5">
+            <div class="max-w-md mx-auto">
+                <h3 class="text-xl font-bold mb-4 text-dark text-center">关于我们</h3>
+                <p class="text-gray-600 text-sm mb-5 leading-relaxed">
+                    广州市信息技术职业学校青年志愿者协会创办于2018年8月，一直奉行"奉献、友爱、互助、进步"的准则和"以奉献扬青春，以文明树新风"的宗旨。
+                </p>
+                <div class="grid grid-cols-2 gap-3 mt-5">
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow transition-shadow touch-friendly">
+                        <i class="fa fa-pencil-square-o text-primary text-xl mb-1"></i>
+                        <h4 class="font-semibold text-sm">秘书部</h4>
+                        <p class="text-xs text-gray-500">负责协会文书工作与协调管理</p>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow transition-shadow touch-friendly">
+                        <i class="fa fa-users text-primary text-xl mb-1"></i>
+                        <h4 class="font-semibold text-sm">社实部</h4>
+                        <p class="text-xs text-gray-500">组织开展各类社会实践活动</p>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow transition-shadow touch-friendly">
+                        <i class="fa fa-handshake-o text-primary text-xl mb-1"></i>
+                        <h4 class="font-semibold text-sm">外联部</h4>
+                        <p class="text-xs text-gray-500">负责对外联络与资源对接</p>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-lg shadow-sm hover:shadow transition-shadow touch-friendly">
+                        <i class="fa fa-bullhorn text-primary text-xl mb-1"></i>
+                        <h4 class="font-semibold text-sm">宣传部</h4>
+                        <p class="text-xs text-gray-500">负责活动宣传与形象塑造</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 报名表单部分 -->
+        <section class="py-6 bg-gray-50 px-5">
+            <div class="max-w-md mx-auto bg-white rounded-xl shadow-md p-5">
+                <h3 class="text-xl font-bold mb-5 text-center text-dark">入会报名表单</h3>
+                <form id="recruitmentForm" class="space-y-4">
+                    <!-- 学生姓名 -->
+                    <div>
+                        <label for="name" class="block text-gray-700 font-medium mb-1 text-sm">学生姓名 <span class="text-red-500">*</span></label>
+                        <input type="text" id="name" name="name" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input-focus text-base"
+                            placeholder="请输入您的姓名">
+                    </div>
+
+                    <!-- 学生班级 -->
+                    <div>
+                        <label for="class" class="block text-gray-700 font-medium mb-1 text-sm">学生班级 <span class="text-red-500">*</span></label>
+                        <input type="text" id="class" name="class" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input-focus text-base"
+                            placeholder="请输入您的班级">
+                    </div>
+
+                    <!-- 学生学号 -->
+                    <div>
+                        <label for="studentId" class="block text-gray-700 font-medium mb-1 text-sm">学生学号 <span class="text-red-500">*</span></label>
+                        <input type="text" id="studentId" name="studentId" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input-focus text-base"
+                            placeholder="请输入您的学号">
+                    </div>
+
+                    <!-- 学生性别 -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2 text-sm">学生性别 <span class="text-red-500">*</span></label>
+                        <div class="flex space-x-6">
+                            <label class="inline-flex items-center touch-friendly">
+                                <input type="radio" name="gender" value="男" required class="form-radio text-primary h-5 w-5">
+                                <span class="ml-2 text-base">男</span>
+                            </label>
+                            <label class="inline-flex items-center touch-friendly">
+                                <input type="radio" name="gender" value="女" required class="form-radio text-primary h-5 w-5">
+                                <span class="ml-2 text-base">女</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 学生联系方式 -->
+                    <div>
+                        <label for="contact" class="block text-gray-700 font-medium mb-1 text-sm">联系方式 <span class="text-red-500">*</span></label>
+                        <input type="tel" id="contact" name="contact" required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input-focus text-base"
+                            placeholder="请输入您的手机号码">
+                    </div>
+
+                    <!-- 意向部门（四选二） -->
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2 text-sm">意向部门（请选择两项） <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-1 gap-2">
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 touch-friendly">
+                                <input type="checkbox" name="departments" value="秘书部" class="form-checkbox text-primary h-5 w-5" data-max="2">
+                                <span class="ml-2 text-base">秘书部</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 touch-friendly">
+                                <input type="checkbox" name="departments" value="社实部" class="form-checkbox text-primary h-5 w-5" data-max="2">
+                                <span class="ml-2 text-base">社实部</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 touch-friendly">
+                                <input type="checkbox" name="departments" value="外联部" class="form-checkbox text-primary h-5 w-5" data-max="2">
+                                <span class="ml-2 text-base">外联部</span>
+                            </label>
+                            <label class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 touch-friendly">
+                                <input type="checkbox" name="departments" value="宣传部" class="form-checkbox text-primary h-5 w-5" data-max="2">
+                                <span class="ml-2 text-base">宣传部</span>
+                            </label>
+                        </div>
+                        <p id="departmentError" class="text-red-500 text-xs mt-1 hidden">请选择两个意向部门</p>
+                    </div>
+
+                    <!-- 提交按钮 -->
+                    <div class="pt-3">
+                        <button type="submit" class="w-full bg-primary text-white font-semibold py-3.5 px-6 rounded-lg hover:bg-primary/90 transition-colors transform hover:-translate-y-0.5 duration-200 text-base">
+                            提交报名 <i class="fa fa-paper-plane ml-1"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- 分享部分 -->
+        <section class="py-6 bg-white px-5">
+            <div class="max-w-md mx-auto">
+                <h3 class="text-xl font-bold mb-4 text-center text-dark">分享报名链接</h3>
+                <p class="text-gray-600 text-sm mb-5 text-center">将报名链接分享给同学，邀请他们一起加入志愿者协会</p>
+                
+                <div class="space-y-5">
+                    <div class="bg-gray-50 p-4 rounded-xl shadow-sm">
+                        <h4 class="font-semibold text-base mb-3">报名链接</h4>
+                        <div class="flex">
+                            <input type="text" id="shareLink" value="https://example.com/volunteer-recruitment-2025" readonly
+                                class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg bg-white text-sm overflow-x-auto">
+                            <button id="copyLink" class="bg-primary text-white px-4 py-3 rounded-r-lg hover:bg-primary/90 transition-colors">
+                                <i class="fa fa-copy"></i>
+                            </button>
+                        </div>
+                        <p id="copySuccess" class="text-green-600 text-xs mt-2 hidden">链接已复制！</p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-xl shadow-sm">
+                        <h4 class="font-semibold text-base mb-3 text-center">扫码报名</h4>
+                        <div class="flex justify-center">
+                            <div id="qrcode" class="border-4 border-white p-2 shadow-md"></div>
+                        </div>
+                        <p class="text-gray-500 text-xs mt-3 text-center">扫描二维码填写报名表</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="bg-dark text-white py-4 px-5 mt-5">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-2">
+                    <i class="fa fa-heart text-secondary"></i>
+                    <h2 class="text-sm font-bold">青年志愿者协会</h2>
+                </div>
+                <p class="text-gray-400 text-xs mb-2">广州市信息技术职业学校 © 2025</p>
+            </div>
+        </footer>
+    </section>
+
+    <!-- 管理员部分 -->
+    <section id="admin" class="min-h-screen hidden bg-gray-50">
+        <div class="max-w-md mx-auto px-5 py-6">
+            <h3 class="text-xl font-bold mb-5 text-center text-dark">管理员中心</h3>
+            
+            <div class="bg-white rounded-xl shadow-md p-5 mb-6">
+                <div class="flex flex-col gap-3">
+                    <input type="password" id="adminPassword" 
+                        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg form-input-focus text-base"
+                        placeholder="请输入管理员密码">
+                    <button id="viewEntries" class="bg-dark text-white font-semibold py-3 px-6 rounded-lg hover:bg-dark/80 transition-colors">
+                        查看报名列表
+                    </button>
+                </div>
+                <p id="passwordError" class="text-red-500 text-xs mt-2 hidden">密码错误，请重试</p>
+            </div>
+            
+            <!-- 报名列表 -->
+            <div id="entriesList" class="hidden bg-white rounded-xl shadow-md p-5 overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="font-semibold text-base">报名信息列表</h4>
+                    <button id="exportData" class="bg-secondary text-white font-medium py-2 px-3 rounded-lg hover:bg-secondary/90 transition-colors text-xs">
+                        <i class="fa fa-download mr-1"></i> 导出
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto max-h-[500px] overflow-y-auto">
+                    <table class="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead class="bg-gray-50 sticky top-0">
+                            <tr>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">序号</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">姓名</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">班级</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">学号</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">性别</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">联系方式</th>
+                                <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">意向部门</th>
+                            </tr>
+                        </thead>
+                        <tbody id="entriesTableBody" class="bg-white divide-y divide-gray-200">
+                            <!-- 报名数据将通过JavaScript动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="noEntries" class="py-10 text-center hidden">
+                    <i class="fa fa-inbox text-gray-300 text-4xl mb-2"></i>
+                    <p class="text-gray-500 text-sm">暂无报名数据</p>
+                </div>
+            </div>
+            
+            <!-- 管理员说明 -->
+            <div class="bg-white rounded-xl shadow-md p-4 mt-6">
+                <h4 class="font-semibold text-sm mb-2 flex items-center">
+                    <i class="fa fa-info-circle text-primary mr-2"></i> 管理员说明
+                </h4>
+                <ul class="text-gray-600 text-xs space-y-1">
+                    <li>• 请妥善保管管理员密码</li>
+                    <li>• 数据存储在当前设备本地</li>
+                    <li>• 可导出CSV文件进行备份</li>
+                    <li>• 导出的文件可使用Excel打开</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 成功提交模态框 -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-[280px] w-full mx-4 transform transition-all">
+            <div class="text-center">
+                <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa fa-check text-xl text-secondary"></i>
+                </div>
+                <h3 class="text-base font-bold mb-2">报名成功！</h3>
+                <p class="text-gray-600 text-sm mb-4">感谢您报名加入青年志愿者协会，我们会尽快与您联系。</p>
+                <button id="closeModal" class="bg-primary text-white font-semibold py-2 px-5 rounded-lg hover:bg-primary/90 transition-colors text-sm">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 存储管理员密码（实际应用中应使用更安全的方式）
+        const ADMIN_PASSWORD = "123456"; // 可自行修改管理员密码
+        
+        // 导航切换功能
+        document.getElementById('navRecruitment').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('recruitment').classList.remove('hidden');
+            document.getElementById('admin').classList.add('hidden');
+            document.getElementById('navRecruitment').classList.add('nav-active');
+            document.getElementById('navAdmin').classList.remove('nav-active');
+            document.getElementById('navAdmin').classList.add('text-gray-500', 'border-transparent');
+        });
+        
+        document.getElementById('navAdmin').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('admin').classList.remove('hidden');
+            document.getElementById('recruitment').classList.add('hidden');
+            document.getElementById('navAdmin').classList.add('nav-active');
+            document.getElementById('navAdmin').classList.remove('text-gray-500', 'border-transparent');
+            document.getElementById('navRecruitment').classList.remove('nav-active');
+        });
+        
+        // 部门选择限制（最多选2个）
+        document.querySelectorAll('input[name="departments"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const checkedCount = document.querySelectorAll('input[name="departments"]:checked').length;
+                const max = parseInt(this.dataset.max);
+                
+                if (checkedCount > max) {
+                    this.checked = false;
+                    document.getElementById('departmentError').classList.remove('hidden');
+                    setTimeout(() => {
+                        document.getElementById('departmentError').classList.add('hidden');
+                    }, 2000);
+                }
+            });
+        });
+        
+        // 表单提交处理
+        document.getElementById('recruitmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 验证部门选择
+            const checkedDepartments = document.querySelectorAll('input[name="departments"]:checked');
+            if (checkedDepartments.length !== 2) {
+                document.getElementById('departmentError').classList.remove('hidden');
+                return;
+            }
+            
+            // 获取表单数据
+            const formData = {
+                name: document.getElementById('name').value,
+                class: document.getElementById('class').value,
+                studentId: document.getElementById('studentId').value,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                contact: document.getElementById('contact').value,
+                departments: Array.from(checkedDepartments).map(cb => cb.value),
+                timestamp: new Date().toLocaleString()
+            };
+            
+            // 保存到本地存储
+            let entries = JSON.parse(localStorage.getItem('volunteerEntries') || '[]');
+            entries.push(formData);
+            localStorage.setItem('volunteerEntries', JSON.stringify(entries));
+            
+            // 显示成功模态框
+            document.getElementById('successModal').classList.remove('hidden');
+            
+            // 重置表单
+            this.reset();
+        });
+        
+        // 关闭模态框
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('successModal').classList.add('hidden');
+        });
+        
+        // 生成二维码
+        window.addEventListener('load', function() {
+            const shareUrl = window.location.href;
+            document.getElementById('shareLink').value = shareUrl;
+            
+            // 生成二维码
+            new QRCode(document.getElementById('qrcode'), {
+                text: shareUrl,
+                width: 140,
+                height: 140,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        });
+        
+        // 复制链接
+        document.getElementById('copyLink').addEventListener('click', function() {
+            const linkInput = document.getElementById('shareLink');
+            linkInput.select();
+            document.execCommand('copy');
+            
+            const successMsg = document.getElementById('copySuccess');
+            successMsg.classList.remove('hidden');
+            setTimeout(() => {
+                successMsg.classList.add('hidden');
+            }, 2000);
+        });
+        
+        // 管理员查看报名列表
+        document.getElementById('viewEntries').addEventListener('click', function() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('passwordError').classList.add('hidden');
+                document.getElementById('entriesList').classList.remove('hidden');
+                loadEntries();
+            } else {
+                document.getElementById('passwordError').classList.remove('hidden');
+                document.getElementById('entriesList').classList.add('hidden');
+            }
+        });
+        
+        // 加载报名数据
+        function loadEntries() {
+            const entries = JSON.parse(localStorage.getItem('volunteerEntries') || '[]');
+            const tableBody = document.getElementById('entriesTableBody');
+            const noEntries = document.getElementById('noEntries');
+            
+            tableBody.innerHTML = '';
+            
+            if (entries.length === 0) {
+                noEntries.classList.remove('hidden');
+                return;
+            }
+            
+            noEntries.classList.add('hidden');
+            
+            entries.forEach((entry, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-3 py-3 whitespace-nowrap">${index + 1}</td>
+                    <td class="px-3 py-3 whitespace-nowrap">${entry.name}</td>
+                    <td class="px-3 py-3 whitespace-nowrap">${entry.class}</td>
+                    <td class="px-3 py-3 whitespace-nowrap">${entry.studentId}</td>
+                    <td class="px-3 py-3 whitespace-nowrap">${entry.gender}</td>
+                    <td class="px-3 py-3 whitespace-nowrap">${entry.contact}</td>
+                    <td class="px-3 py-3 whitespace-nowrap">${entry.departments.join('、')}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // 导出数据
+        document.getElementById('exportData').addEventListener('click', function() {
+            const entries = JSON.parse(localStorage.getItem('volunteerEntries') || '[]');
+            if (entries.length === 0) return;
+            
+            // 转换为CSV格式
+            let csvContent = "序号,姓名,班级,学号,性别,联系方式,意向部门,报名时间\n";
+            
+            entries.forEach((entry, index) => {
+                csvContent += `${index + 1},`;
+                csvContent += `${entry.name},`;
+                csvContent += `${entry.class},`;
+                csvContent += `${entry.studentId},`;
+                csvContent += `${entry.gender},`;
+                csvContent += `${entry.contact},`;
+                csvContent += `${entry.departments.join('、')},`;
+                csvContent += `${entry.timestamp}\n`;
+            });
+            
+            // 创建下载链接
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `志愿者协会报名数据_${new Date().toLocaleDateString()}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // 提示导出成功
+            alert('数据导出成功！');
+        });
+    </script>
+</body>
+</html>
+    
